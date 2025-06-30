@@ -117,7 +117,18 @@ window.onload = function() {
             fields[5].value;
 
             if(fields[9].value) {
-                concat += " - " + fields[9].value;
+                // concat += " - " + fields[9].value;
+                concat = 
+                getSelectedText +
+                " - " +
+                fields[6].value +
+                fields[7].value +
+                fields[8].value +
+                fields[9].value +
+                " - " +
+                fields[4].value +
+                " - " +
+                fields[5].value;
             }
             return concat;
             // console.log(concat);
