@@ -314,7 +314,7 @@ return /\s/.test(str);
             getUrlResult.value = urlResult;
             getEmailResult.value = emailResult;
         } else {
-            alert('error');
+            // alert('error');
         }
         
 
