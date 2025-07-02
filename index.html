@@ -12,22 +12,24 @@
         <div class="container">
             <h1 class="main-header">Email URL Generator</h1>
             <div class="text-input">
-                <label for="full-url" class="e-label">Full URL</label>
-                <input class="input-text" type="text" id="full-url" placeholder="https://example.com">
+                <label for="full-url" class="e-label">Full URL<sup class="required">*</sup></label>
+                <input class="input-text req" type="text" id="full-url" placeholder="https://example.com" required>
+                <p class="error_msg"></p>
                 <input type="text" class="fieldValue" value="" id="main-url" hidden>
             </div>
             <div class="text-input">
-                <label for="fsyear" class="e-label">Fiscal Year</label>
-                <select name="fiscalYear" class="pick-list" id="fsyear">
+                <label for="fsyear" class="e-label">Fiscal Year<sup class="required">*</sup></label>
+                <select name="fiscalYear" class="pick-list req" id="fsyear" required>
                     <option value="">Fiscal Year</option>
                     <option value="em_fy25">FY25</option>
                     <option value="em_fy26">FY26</option>
                 </select>
+                <p class="error_msg"></p>
                 <input type="text" class="fieldValue" value="" id="fiscal_year" hidden>
             </div>
             <div class="dropdown">
-                <label for="market-source-code" class="e-label"> Market Source Code</label>
-                <select name="mkt-src-code" class="pick-list" id="market-source-code">
+                <label for="market-source-code" class="e-label"> MS-Campaign<sup class="required">*</sup></label>
+                <select name="mkt-src-code" class="pick-list req" id="market-source-code" required>
                     <option value="" selected>Select Market Source Code</option>
                     <option value="asylum">asylum</option>
                     <option value="bangladesh">bangladesh</option>
@@ -77,11 +79,12 @@
                     <option value="somalia">somalia</option>
                     <option value="westafrica">westafrica</option>
                 </select>
+                <p class="error_msg"></p>
                 <input type="text" class="fieldValue" value="" id="marketSourceCode" hidden>
             </div>
             <div class="dropdown">
-                <label for="mkt" class="e-label">Market</label>
-                <select name="market" class="pick-list" id="mkt">
+                <label for="mkt" class="e-label">Market<sup class="required">*</sup></label>
+                <select name="market" class="pick-list req" id="mkt" required>
                     <option value="">Select Market</option>
                     <option value="us">US</option>
                     <option value="de">DE</option>
@@ -90,11 +93,12 @@
                     <option value="sk">SK</option>
                     <option value="rm">RM</option>
                 </select>
+                <p class="error_msg"></p>
                 <input type="text" class="fieldValue" value="" id="marketfield" hidden>
             </div>
             <div class="dropdown">
-                <label for="emailType" class="e-label">Email Type</label>
-                <select name="email-type" class="pick-list" id="emailType">
+                <label for="emailType" class="e-label">Email Type<sup class="required">*</sup></label>
+                <select name="email-type" class="pick-list req" id="emailType" required>
                     <option value="" selected>Select Type</option>
                     <option value="Fundraising">Fundraising</option>
                     <option value="Cultivation">Cultivation</option>
@@ -102,16 +106,18 @@
                     <option value="Advocacy">Advocacy</option>
                     <option value="Thank You">Thank You</option>
                 </select>
+                <p class="error_msg"></p>
                 <input type="text" class="fieldValue" id="email_type" hidden>
             </div>
             <div class="text-input">
-                <label for="name_of_creative" class="e-label">Name of Creative</label>
-                <input class="input-text" type="text" id="name_of_creative" placeholder="e.g. Bangladesh">
+                <label for="name_of_creative" class="e-label">Name of Creative<sup class="required">*</sup></label>
+                <input class="input-text req" type="text" id="name_of_creative" placeholder="e.g. Bangladesh" required>
+                <p class="error_msg"></p>
                 <input type="text" class="fieldValue" id="creative_name" hidden>
             </div>
             <div class="dropdown">
                 <label for="month" class="e-label">Month</label>
-                <select name="month" class="pick-list" id="month">
+                <select name="month" class="pick-list req" id="month" required>
                     <option value="" selected>Select Month</option>
                     <option value="Jan">Jan</option>
                     <option value="Feb">Feb</option>
@@ -126,11 +132,12 @@
                     <option value="Nov">Nov</option>
                     <option value="Dec">Dec</option>
                 </select>
+                <p class="error_msg"></p>
                 <input type="text" class="fieldValue" id="gen_month" hidden>
             </div>
             <div class="dropdown">
-                <label for="email_version" class="e-label">Email Version/Number</label>
-                <select name="email-version" class="pick-list" id="email_version">
+                <label for="email_version" class="e-label">Email Version/Number<sup class="required">*</sup></label>
+                <select name="email-version" class="pick-list req" id="email_version" required>
                     <option value="" selected>Select Email Version/Number</option>
                     <option value="01">01</option>
                     <option value="02">02</option>
@@ -164,11 +171,12 @@
                     <option value="30">30</option>
                     <option value="31">31</option>
                 </select>
+                <p class="error_msg"></p>
                 <input type="text" class="fieldValue" id="emailVersion" hidden>
             </div>
             <div class="dropdown">
-                <label for="audience_segment" class="e-label">Audience Segment</label>
-                <select name="aud-seg" class="pick-list" id="audience_segment">
+                <label for="audience_segment" class="e-label">Audience Segment<sup class="required">*</sup></label>
+                <select name="aud-seg" class="pick-list req" id="audience_segment" required>
                     <option value="" selected>Select Audience Segment</option>
                     <option value="STM">Standard Mailable (STM)</option>
                     <option value="STN">Standard Nonmailable (STN)</option>
@@ -220,6 +228,7 @@
                     <option value="MIX">Mixed (MIX)</option>
                     <option value="custom">custom</option>
                 </select>
+                <p class="error_msg"></p>
                 <input type="text" class="fieldValue" id="audienceSegment" hidden>
             </div>
             <div class="dropdown">

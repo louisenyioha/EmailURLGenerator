@@ -51,18 +51,49 @@ body {
     margin-bottom: .25rem;
 }
 
+.invalid {
+    border: 2px solid #CC181E !important;
+}
+
+.valid {
+    border: 2px solid green !important;
+}
+
+.input-text:focus, .pick-list:focus {
+    border: 2px solid #FDC513;
+}
+
+.input-text:focus-visible, .pick-list:focus-visible {
+    outline: none;
+}
+
+.required {
+    color: #CC181E;
+    font-weight: 900;
+}
+
+.error_msg {
+    margin: 2px 0 0 14px;
+    font: inherit;
+    font-size: 12px;
+    display: none;
+    color: #CC181E;
+}
+
 .main-header {
     font-weight: 700;
     font-size: 1.5rem;
     line-height: 2rem;
     margin-bottom: 1.5rem;
-    color: rgb(29, 78, 216);
+    color: #000;
 }
 
 .btn-gen-url {
     padding: .5rem 1rem;
-    background-color: rgb(37, 99, 255);
-    color: rgb(255, 255, 255);
+    /* background-color: rgb(37, 99, 255); */
+    background-color: #FDC513;
+    /* color: rgb(255, 255, 255); */
+    color: rgb#000;
     border-radius: 6px;
     cursor: pointer;
     outline: none;

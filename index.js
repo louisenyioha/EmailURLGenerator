@@ -31,6 +31,143 @@ window.onload = function() {
 
     const getGenBtn = document.querySelector('#btn_generate_url');
 
+    const getInputfields = document.querySelectorAll('.fieldValue');
+
+    const getMainInput = document.querySelectorAll('.input-text');
+
+    const getPickLists = document.querySelectorAll('.pick-list');
+
+    const getAllInputEl = document.querySelectorAll('.req');
+
+
+    
+    let errorMsg = "whitespace not allowed";
+    let errorMsg2 = "This field is required";
+    let errorMsg3 = 'Please fix all error(s) and click on "Generate URL" button';
+
+
+
+// Check for white space(s) in input fields
+function checkWhiteSpace(str) {
+    return /\s/.test(str);
+}
+
+// Check for white space(s) in input fields
+function checkWhiteSpace(str) {
+return /\s/.test(str);
+}
+
+// Input validation(s)
+  const inputInvalid = function (el) {
+    el.nextElementSibling.style.display = "block";
+    if (el.classList.contains("valid")) {
+      el.classList.remove("valid");
+    }
+    el.classList.add("invalid");
+  };
+
+  const inputValid = function (el) {
+    el.nextElementSibling.style.display = "none";
+    el.nextElementSibling.innerHTML = "";
+    if (el.classList.contains("invalid")) {
+      el.classList.remove("invalid");
+    }
+    el.classList.add("valid");
+  };
+
+  const restoreDefault = function (el) {
+    el.nextElementSibling.style.display = "none";
+    el.nextElementSibling.innerHTML = "";
+    if (el.classList.contains("valid")) {
+      el.classList.remove("valid");
+    }
+
+    if (el.classList.contains("invalid")) {
+      el.classList.remove("invalid");
+    }
+  };
+
+  const hiddenInputValidate = function (el) {
+    el.removeAttribute("required");
+    if (el.classList.contains("invalid")) {
+      el.classList.remove("invalid");
+      el.nextElementSibling.innerHTML = "";
+      el.nextElementSibling.style.display = "none";
+    }
+  };
+
+    // Required fields validation
+  const validateRequired = function () {
+    let empty = 0;
+    for (let i = 0; i < getAllInputEl.length; i++) {
+      if (
+        getAllInputEl[i].hasAttribute("required") &&
+        getAllInputEl[i].value == ""
+      ) {
+        empty++;
+      }
+    }
+    if (empty == 0) {
+      return true;
+    } else {
+      for (let i = 0; i < getAllInputEl.length; i++) {
+        if (
+            getAllInputEl[i].hasAttribute("required") &&
+            getAllInputEl[i].value == ""
+        ) {
+          inputInvalid(getAllInputEl[i]);
+          getAllInputEl[i].nextElementSibling.innerHTML = errorMsg2;
+        }
+      }
+    }
+  };
+
+  
+  for (let i = 0; i < getMainInput.length; i++) {
+    getMainInput[i].addEventListener("input", function () {
+      const getValue = getMainInput[i].value;
+      const getSibling = getMainInput[i].nextElementSibling;
+
+      if (checkWhiteSpace(getValue) == true) {
+        if (getSibling.classList.contains("error_msg")) {
+          inputInvalid(getMainInput[i]);
+          getMainInput[i].nextElementSibling.innerHTML = errorMsg;
+        //   getGenErr.innerHTML = errorMsg3;
+        }
+      } else if (checkWhiteSpace(getValue) == false) {
+        if (getValue != "") {
+          inputValid(getMainInput[i]);
+        } else if (getValue == "") {
+          restoreDefault(getMainInput[i]);
+        }
+      }
+    });
+  }
+
+  // Validation for required drop down options
+  for(let i = 0; i < getPickLists.length; i++) {
+    getPickLists[i].addEventListener('change', function(event) {
+        let selectedValue = event.target.value;
+        let getSiblingElement = getPickLists[i].nextElementSibling;
+        let getID = getPickLists[i].getAttribute('id');
+        if(getID !== 'additional_testing_variants') {
+            if(selectedValue === '') {
+                inputInvalid(getPickLists[i]);
+                getSiblingElement.innerHTML = errorMsg2;
+    
+            }
+    
+            if(selectedValue !== '') {
+                inputValid(getPickLists[i]);
+                getSiblingElement.innerHTML = '';
+            }
+        }
+         
+
+    })
+  }
+
+
     // Populate input fields
     const populateTextInputValue = function(p1, p2) {
         p1.addEventListener('input', function() {
@@ -71,7 +208,7 @@ window.onload = function() {
     populateDropDownValue(getATV, getATVInput);
 
     // Get input fields
-    const getInputfields = document.querySelectorAll('.fieldValue');
+    // const getInputfields = document.querySelectorAll('.fieldValue');
 
     const calcUrlResults = function(fields) {
         for(let i = 0; i < fields.length; i++) {
@@ -87,11 +224,39 @@ window.onload = function() {
             "_" +
             fields[6].value +
             fields[7].value +
-            fields[8].value;
+            fields[8].value +
+            "&" +
+            "utm_medium=email" +
+            "&" +
+            "utm_source=pardot" +
+            "&" +
+            "utm_campaign=" +
+            fields[2].value;
 
             if(fields[9].value) {
             //    concat = concat + fields[9].value;
-               concat += fields[9].value;
+            //    concat += fields[9].value;
+                concat = 
+                fields[0].value +
+                "?" +
+                "ms=" +
+                fields[1].value +
+                "_" +
+                fields[2].value +
+                "_" +
+                fields[3].value +
+                "_" +
+                fields[6].value +
+                fields[7].value +
+                fields[8].value +
+                fields[9].value +
+                "&" +
+                "utm_medium=email" +
+                "&" +
+                "utm_source=pardot" +
+                "&" +
+                "utm_campaign=" +
+                fields[2].value;
             }
             return concat;
             // console.log(concat);
@@ -141,15 +306,54 @@ window.onload = function() {
     getGenBtn.addEventListener('click', function() {
         let urlResult = '';
         let emailResult = '';
-        urlResult = calcUrlResults(getInputfields);
-        emailResult = calcEmailResults(getInputfields);
+        if(validateRequired()) {
+            urlResult = calcUrlResults(getInputfields);
+            emailResult = calcEmailResults(getInputfields);
 
-        console.log(urlResult);
-        getUrlResult.value = urlResult;
-        getEmailResult.value = emailResult;
+            console.log(urlResult);
+            getUrlResult.value = urlResult;
+            getEmailResult.value = emailResult;
+        } else {
+            alert('error');
+        }
+        
 
     });
     // calcResults(getInputfields);
+
+
+    //URL validation
+    function isValidURL(string) {
+        var res = string.match(
+        /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+        );
+        return res !== null;
+    }
+    
+
+    getFullUrl.addEventListener("input", function () {
+        let getUrlValue = getFullUrl.value;
+    
+        if (isValidURL(getUrlValue) == true) {
+          if (getFullUrl.classList.contains("invalid")) {
+            getFullUrl.classList.remove("invalid");
+          }
+    
+          if (!getFullUrl.classList.contains("valid")) {
+            getFullUrl.classList.add("invalid");
+          }
+        }
+    
+        if (isValidURL(getUrlValue) !== true) {
+          if (getFullUrl.classList.contains("valid")) {
+            getFullUrl.classList.remove("valid");
+            getFullUrl.classList.add("invalid");
+            getFullUrl.nextElementSibling.innerHTML =
+              "The website URL provided is not a valid URL.";
+              getFullUrl.nextElementSibling.style.display = "block";
+          }
+        }
+      });
 };
 
 
