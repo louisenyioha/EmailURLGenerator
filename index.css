@@ -67,6 +67,13 @@ body {
     outline: none;
 }
 
+.link-to-instructions a,
+.link-to-instructions a:active,
+.link-to-instructions a:visited{
+    color: #000;
+    text-decoration: none;
+}
+
 .required {
     color: #CC181E;
     font-weight: 900;

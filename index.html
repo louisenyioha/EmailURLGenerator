@@ -11,6 +11,9 @@
     <div class="maincontainer">
         <div class="container">
             <h1 class="main-header">Email URL Generator</h1>
+            <div class="link-to-instructions">
+                <a href="#builder-instructions">Click here to view instructions</a>
+            </div>
             <div class="text-input">
                 <label for="full-url" class="e-label">Full URL<sup class="required">*</sup></label>
                 <input class="input-text req" type="text" id="full-url" placeholder="https://example.com" required>
@@ -30,7 +33,7 @@
             <div class="dropdown">
                 <label for="market-source-code" class="e-label"> MS-Campaign<sup class="required">*</sup></label>
                 <select name="mkt-src-code" class="pick-list req" id="market-source-code" required>
-                    <option value="" selected>Select Market Source Code</option>
+                    <option value="" selected>Select MS-Campaign</option>
                     <option value="asylum">asylum</option>
                     <option value="bangladesh">bangladesh</option>
                     <option value="border">border</option>
@@ -116,7 +119,7 @@
                 <input type="text" class="fieldValue" id="creative_name" hidden>
             </div>
             <div class="dropdown">
-                <label for="month" class="e-label">Month</label>
+                <label for="month" class="e-label">Month<sup class="required">*</sup></label>
                 <select name="month" class="pick-list req" id="month" required>
                     <option value="" selected>Select Month</option>
                     <option value="Jan">Jan</option>
@@ -285,7 +288,7 @@
                 </div>
             </div>
 
-            <div class="builder-instructions">
+            <div id="builder-instructions" class="builder-instructions">
                 <h2>URL Builder Instructions</h2>
                 <table>
                     <thead>
@@ -309,16 +312,16 @@
                         <td class="blr"></td>
                         <td class="bl"></td>
                     </tr>
-                    <tr class="shade">
-                        <td class="br">Market</td>
-                        <td class="blr">Identifies the market sending the email.</td>
-                        <td class="blr">Please select your market from the drop down list</td>
-                        <td class="bl"></td>
-                    </tr>
                     <tr class="noshade">
                         <td class="br">Market Source Campaign</td>
                         <td class="blr">The top-level theme of your campaign</td>
                         <td class="blr">Select the campaign theme from the list provided.</td>
+                        <td class="bl"></td>
+                    </tr>
+                    <tr class="shade">
+                        <td class="br">Market</td>
+                        <td class="blr">Identifies the market sending the email.</td>
+                        <td class="blr">Please select your market from the drop down list</td>
                         <td class="bl"></td>
                     </tr>
                     <tr class="shade">
@@ -328,7 +331,7 @@
                         <td class="bl">Fundraising</td>
                     </tr>
                     <tr class="noshade">
-                        <td class="br">Email Title</td>
+                        <td class="br">Name of Creative</td>
                         <td class="blr">To capture more granular information about the email send.</td>
                         <td class="blr">Use this field to provide more details about the email topic or type.</td>
                         <td class="bl">	Giving Tuesday Match Launch</td>

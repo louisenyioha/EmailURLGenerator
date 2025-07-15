@@ -128,11 +128,14 @@ return /\s/.test(str);
       const getValue = getMainInput[i].value;
       const getSibling = getMainInput[i].nextElementSibling;
 
+      if(getMainInput[i].getAttribute('id') == 'name_of_creative') {
+        return;
+      }
+
       if (checkWhiteSpace(getValue) == true) {
         if (getSibling.classList.contains("error_msg")) {
           inputInvalid(getMainInput[i]);
           getMainInput[i].nextElementSibling.innerHTML = errorMsg;
-        //   getGenErr.innerHTML = errorMsg3;
         }
       } else if (checkWhiteSpace(getValue) == false) {
         if (getValue != "") {
@@ -143,6 +146,18 @@ return /\s/.test(str);
       }
     });
   }
+
+  getNameOfCreative.addEventListener('input', function() {
+    let fieldValue = getNameOfCreative.value;
+    if(fieldValue || fieldValue !== null || fieldValue !== '') {
+        if(getNameOfCreative.classList.contains('invalid')) {
+            getNameOfCreative.classList.remove('invalid');
+            getNameOfCreative.classList.add('valid');
+            getNameOfCreative.nextElementSibling.innerHTML = '';
+            getNameOfCreative.nextElementSibling.style.display = 'none';
+        }
+    }
+  });
 
   // Validation for required drop down options
   for(let i = 0; i < getPickLists.length; i++) {
