@@ -162,6 +162,15 @@ return /\s/.test(str);
     }
   });
 
+  getNameOfCreative.addEventListener('input', function() {
+    let fieldValue = getNameOfCreative.value;
+    let NewfieldValue = '';
+    if(fieldValue.includes('-')) {
+      NewfieldValue = fieldValue.replace(/-/g, ' ');
+      getNameOfCreative.value = NewfieldValue;
+    }
+  })
+
   // Validation for required drop down options
   for(let i = 0; i < getPickLists.length; i++) {
     getPickLists[i].addEventListener('change', function(event) {
