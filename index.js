@@ -44,6 +44,7 @@ window.onload = function() {
     let errorMsg = "whitespace not allowed";
     let errorMsg2 = "This field is required";
     let errorMsg3 = 'Please fix all error(s) and click on "Generate URL" button';
+    let savedUrlMsg = "Generated URL have been saved";
 
 
 
@@ -368,7 +369,118 @@ return /\s/.test(str);
               getFullUrl.nextElementSibling.style.display = "block";
           }
         }
-      });
+    });
+
+    const scriptURL_MMUS = "https://script.google.com/macros/s/AKfycbywcYE5gOTDUFQne3_3OmnBRter9Yn7H6xGZ-aVFzjthjzCvmGt4SbdnaEpkZqUYptDhQ/exec";
+    const form = document.querySelector("#submit-to-google-sheet");
+    const getlabel = document.querySelector("#url_saved_message");
+    // const getMarketEmail = document.querySelector("#mkt");
+    const saveButton = document.querySelector("#save-button");
+    console.log(saveButton);
+
+    form.addEventListener("submit", (e) => {
+      saveButton.disabled = true;
+      e.preventDefault();
+      const getMarketEmail = document.querySelector("#mkt");
+      if (getMarketEmail.value == "us") {
+        fetch(scriptURL_MMUS, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            saveButton.disabled = false;
+            getlabel.innerHTML = savedUrlMsg;
+            setTimeout(() => {
+              getlabel.style.display = "none";
+            }, 5000);
+            setTimeout(() => {
+              // window.location.reload();
+            }, 3000);
+          })
+          .catch((error) => {
+            console.error("Error", error.message);
+            saveButton.disabled = false;
+          });
+      } 
+      // else if (getMarket.value == "_ukmk") {
+      //   fetch(scriptURLUK, { method: "POST", body: new FormData(form) })
+      //     .then((response) => {
+      //       saveButton.disabled = false;
+      //       getlabel.innerHTML = savedUrlMsg;
+      //       setTimeout(() => {
+      //         getlabel.style.display = "none";
+      //       }, 5000);
+      //       setTimeout(() => {
+      //         window.location.reload();
+      //       }, 3000);
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error", error.message);
+      //       saveButton.disabled = false;
+      //     });
+      // } else if (getMarket.value == "_nm") {
+      //   fetch(scriptURLRM, { method: "POST", body: new FormData(form) })
+      //     .then((response) => {
+      //       saveButton.disabled = false;
+      //       getlabel.innerHTML = savedUrlMsg;
+      //       setTimeout(() => {
+      //         getlabel.style.display = "none";
+      //       }, 5000);
+      //       setTimeout(() => {
+      //         window.location.reload();
+      //       }, 3000);
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error", error.message);
+      //       saveButton.disabled = false;
+      //     });
+      // } else if (getMarket.value == "_semk") {
+      //   fetch(scriptURLSE, { method: "POST", body: new FormData(form) })
+      //     .then((response) => {
+      //       saveButton.disabled = false;
+      //       getlabel.innerHTML = savedUrlMsg;
+      //       setTimeout(() => {
+      //         getlabel.style.display = "none";
+      //       }, 5000);
+      //       setTimeout(() => {
+      //         window.location.reload();
+      //       }, 3000);
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error", error.message);
+      //       saveButton.disabled = false;
+      //     });
+      // } else if (getMarket.value == "_mmsk") {
+      //   fetch(scriptURLSK, { method: "POST", body: new FormData(form) })
+      //     .then((response) => {
+      //       saveButton.disabled = false;
+      //       getlabel.innerHTML = savedUrlMsg;
+      //       setTimeout(() => {
+      //         getlabel.style.display = "none";
+      //       }, 5000);
+      //       setTimeout(() => {
+      //         window.location.reload();
+      //       }, 3000);
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error", error.message);
+      //       saveButton.disabled = false;
+      //     });
+      // } else {
+      //   fetch(scriptURLUS, { method: "POST", body: new FormData(form) })
+      //     .then((response) => {
+      //       saveButton.disabled = false;
+      //       getlabel.innerHTML = savedUrlMsg;
+      //       setTimeout(() => {
+      //         getlabel.style.display = "none";
+      //       }, 5000);
+      //       setTimeout(() => {
+      //         window.location.reload();
+      //       }, 3000);
+      //     })
+      //     .catch((error) => {
+      //       console.error("Error", error.message);
+      //       saveButton.disabled = false;
+      //     });
+      // }
+    });
 };
 
 
