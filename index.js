@@ -162,12 +162,19 @@ return /\s/.test(str);
     }
   });
 
+  // Prevent dashes in Name of Creative field
   getNameOfCreative.addEventListener('input', function() {
     let fieldValue = getNameOfCreative.value;
     let NewfieldValue = '';
     if(fieldValue.includes('-')) {
       NewfieldValue = fieldValue.replace(/-/g, ' ');
       getNameOfCreative.value = NewfieldValue;
+      getNameOfCreative.nextElementSibling.innerHTML = 'Caution: Dashes are not allowed in this field and will be automatically replaced by a space';
+      getNameOfCreative.nextElementSibling.style.display = 'block';
+      setTimeout(() => {
+        getNameOfCreative.nextElementSibling.innerHTML = '';
+      getNameOfCreative.nextElementSibling.style.display = 'none';
+      }, 3000);
     }
   })
 
