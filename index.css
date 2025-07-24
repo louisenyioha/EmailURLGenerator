@@ -41,6 +41,14 @@ body {
     margin-bottom: 20px;
 }
 
+#save-input-name, #save-button, #copy-text, .reset-note, .url-save-note, #emailnameCopy{
+    display: none;
+}
+
+.copy-text {
+    margin-bottom: 30px;
+}
+
 .input-text, .urloutput, .emailoutput {
     /* width: 98%; */
     width: 68%;

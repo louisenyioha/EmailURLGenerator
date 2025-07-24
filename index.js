@@ -44,7 +44,7 @@ window.onload = function() {
     let errorMsg = "whitespace not allowed";
     let errorMsg2 = "This field is required";
     let errorMsg3 = 'Please fix all error(s) and click on "Generate URL" button';
-    let savedUrlMsg = "Generated URL have been saved";
+    let savedUrlMsg = "Generated Email URL and Pardot Email name have been saved";
 
 
 
@@ -156,6 +156,8 @@ return /\s/.test(str);
             getNameOfCreative.classList.add('valid');
             getNameOfCreative.nextElementSibling.innerHTML = '';
             getNameOfCreative.nextElementSibling.style.display = 'none';
+        } else {
+          getNameOfCreative.classList.add('valid');
         }
     }
   });
@@ -198,7 +200,6 @@ return /\s/.test(str);
         if(selectedValue || selectedValue !== null || selectedValue !== '') {
             p2.value = selectedValue
         }
-        console.log(p2.value);
     });
    }
 
@@ -275,7 +276,6 @@ return /\s/.test(str);
                 fields[2].value;
             }
             return concat;
-            // console.log(concat);
         }
     }
 
@@ -312,12 +312,17 @@ return /\s/.test(str);
                 fields[5].value;
             }
             return concat;
-            // console.log(concat);
         }
     }
 
     let getUrlResult = document.querySelector('#urloutput');
     let getEmailResult = document.querySelector('#emailoutput');
+    let getUrlNote = document.querySelector('.url-save-note');
+    let saveButton = document.querySelector("#save-button");
+    let getInputName = document.querySelector('#save-input-name');
+    let getResetNote = document.querySelector('.reset-note');
+    let getCopyBtn = document.querySelector('#copy-text');
+    let getCopyBtn2 = document.querySelector('#emailnameCopy');
 
     getGenBtn.addEventListener('click', function() {
         let urlResult = '';
@@ -326,9 +331,16 @@ return /\s/.test(str);
             urlResult = calcUrlResults(getInputfields);
             emailResult = calcEmailResults(getInputfields);
 
-            console.log(urlResult);
+            // console.log(urlResult);
             getUrlResult.value = urlResult;
             getEmailResult.value = emailResult;
+            getUrlNote.style.display = "block";
+            saveButton.style.display = 'block';
+            getInputName.style.display = 'block';
+            getResetNote.style.display = 'block';
+            getCopyBtn.style.display = 'block';
+            getCopyBtn2.style.display = 'block';
+
         } else {
             // alert('error');
         }
@@ -371,12 +383,83 @@ return /\s/.test(str);
         }
     });
 
-    const scriptURL_MMUS = "https://script.google.com/macros/s/AKfycbywcYE5gOTDUFQne3_3OmnBRter9Yn7H6xGZ-aVFzjthjzCvmGt4SbdnaEpkZqUYptDhQ/exec";
+
+    // Copy generated link
+
+    getCopyBtn.addEventListener("click", function () {
+    const initialText = "Copy URL for Email";
+    getUrlResult.select();
+    getUrlResult.setSelectionRange(0, 999999); //For mobile devices
+    // navigator.clipboard.writeText(getUrlResult.textContent);
+    navigator.clipboard.writeText(getUrlResult.value);
+
+    if (
+      getCopyBtn.textContent
+        .toLowerCase()
+        .includes(initialText.toLowerCase())
+    ) {
+      getCopyBtn.textContent = "Email URL Copied";
+    } else {
+      getCopyBtn.textContent = initialText;
+    }
+  });
+
+  getCopyBtn.addEventListener("mouseout", function () {
+    const initialText = "Email URL Copied";
+
+    if (
+      getCopyBtn.textContent
+        .toLowerCase()
+        .includes(initialText.toLowerCase())
+    ) {
+      getCopyBtn.textContent = "Copy URL for Email";
+    }
+  });
+
+
+    // Copy Pardot Email Name
+
+    getCopyBtn2.addEventListener("click", function () {
+    const initialText = "Copy Pardot Email Name";
+    getEmailResult.select();
+    getEmailResult.setSelectionRange(0, 999999); //For mobile devices
+    // navigator.clipboard.writeText(getUrlResult.textContent);
+    navigator.clipboard.writeText(getEmailResult.value);
+
+    if (
+      getCopyBtn2.textContent
+        .toLowerCase()
+        .includes(initialText.toLowerCase())
+    ) {
+      getCopyBtn2.textContent = "Pardot Email Name Copied";
+    } else {
+      getCopyBtn2.textContent = initialText;
+    }
+  });
+
+  getCopyBtn2.addEventListener("mouseout", function () {
+    const initialText = "Pardot Email Name Copied";
+
+    if (
+      getCopyBtn2.textContent
+        .toLowerCase()
+        .includes(initialText.toLowerCase())
+    ) {
+      getCopyBtn2.textContent = "Copy Pardot Email Name";
+    }
+  });
+
+    const scriptURL_MMUS = "https://script.google.com/macros/s/AKfycbzTVSI115lpjR2dTpy5HOcrzX31AADmFncgKE9Jq76Pr03VH9NRXGEILee3O-IgG1OM0A/exec";
+    const scriptURL_UK = "https://script.google.com/macros/s/AKfycbymlyKNYy1Ru9XSkp1n-qhY3OH2rztv0xFq5x4iQKUxAC-KXi9ZwVoKH8WIaCss2gMu8g/exec";
+    const scriptURL_SK = "https://script.google.com/macros/s/AKfycbwOsNTpHU1-sDjASV2MYUTdYKzYPT0Kbn9AhbvYfvd8qN1wzYzZMVaViMG05LdQRvDoZg/exec";
+    const scriptURL_RM = "https://script.google.com/macros/s/AKfycbwb9BT5n7o970p2rMd4XbWh7rSz0d5FcQysP1YgLcUzc7Daln3YFogGrfHFYKP41yH9jQ/exec";
+    const scriptURL_DE = "https://script.google.com/macros/s/AKfycbzuT-fdusmmzJU66NUce0D2yT0rnxvoIePsJLz3vTmSLMEXOjXxdypBnpbIp_vL3x68hw/exec";
+    const scriptURL_SE = "https://script.google.com/macros/s/AKfycbwHi4Xwtja69aPN02JI_OhKTRJPURUIQ7QVd2Hu2UV9Koax77wDf76CqWgeA1ir4s7JvA/exec";
     const form = document.querySelector("#submit-to-google-sheet");
     const getlabel = document.querySelector("#url_saved_message");
     // const getMarketEmail = document.querySelector("#mkt");
-    const saveButton = document.querySelector("#save-button");
-    console.log(saveButton);
+    
+
 
     form.addEventListener("submit", (e) => {
       saveButton.disabled = true;
@@ -391,7 +474,7 @@ return /\s/.test(str);
               getlabel.style.display = "none";
             }, 5000);
             setTimeout(() => {
-              // window.location.reload();
+              window.location.reload();
             }, 3000);
           })
           .catch((error) => {
@@ -399,87 +482,91 @@ return /\s/.test(str);
             saveButton.disabled = false;
           });
       } 
-      // else if (getMarket.value == "_ukmk") {
-      //   fetch(scriptURLUK, { method: "POST", body: new FormData(form) })
-      //     .then((response) => {
-      //       saveButton.disabled = false;
-      //       getlabel.innerHTML = savedUrlMsg;
-      //       setTimeout(() => {
-      //         getlabel.style.display = "none";
-      //       }, 5000);
-      //       setTimeout(() => {
-      //         window.location.reload();
-      //       }, 3000);
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error", error.message);
-      //       saveButton.disabled = false;
-      //     });
-      // } else if (getMarket.value == "_nm") {
-      //   fetch(scriptURLRM, { method: "POST", body: new FormData(form) })
-      //     .then((response) => {
-      //       saveButton.disabled = false;
-      //       getlabel.innerHTML = savedUrlMsg;
-      //       setTimeout(() => {
-      //         getlabel.style.display = "none";
-      //       }, 5000);
-      //       setTimeout(() => {
-      //         window.location.reload();
-      //       }, 3000);
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error", error.message);
-      //       saveButton.disabled = false;
-      //     });
-      // } else if (getMarket.value == "_semk") {
-      //   fetch(scriptURLSE, { method: "POST", body: new FormData(form) })
-      //     .then((response) => {
-      //       saveButton.disabled = false;
-      //       getlabel.innerHTML = savedUrlMsg;
-      //       setTimeout(() => {
-      //         getlabel.style.display = "none";
-      //       }, 5000);
-      //       setTimeout(() => {
-      //         window.location.reload();
-      //       }, 3000);
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error", error.message);
-      //       saveButton.disabled = false;
-      //     });
-      // } else if (getMarket.value == "_mmsk") {
-      //   fetch(scriptURLSK, { method: "POST", body: new FormData(form) })
-      //     .then((response) => {
-      //       saveButton.disabled = false;
-      //       getlabel.innerHTML = savedUrlMsg;
-      //       setTimeout(() => {
-      //         getlabel.style.display = "none";
-      //       }, 5000);
-      //       setTimeout(() => {
-      //         window.location.reload();
-      //       }, 3000);
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error", error.message);
-      //       saveButton.disabled = false;
-      //     });
-      // } else {
-      //   fetch(scriptURLUS, { method: "POST", body: new FormData(form) })
-      //     .then((response) => {
-      //       saveButton.disabled = false;
-      //       getlabel.innerHTML = savedUrlMsg;
-      //       setTimeout(() => {
-      //         getlabel.style.display = "none";
-      //       }, 5000);
-      //       setTimeout(() => {
-      //         window.location.reload();
-      //       }, 3000);
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error", error.message);
-      //       saveButton.disabled = false;
-      //     });
-      // }
+      else if (getMarket.value == "uk") {
+        fetch(scriptURL_UK, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            saveButton.disabled = false;
+            getlabel.innerHTML = savedUrlMsg;
+            setTimeout(() => {
+              getlabel.style.display = "none";
+            }, 5000);
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          })
+          .catch((error) => {
+            console.error("Error", error.message);
+            saveButton.disabled = false;
+          });
+      } 
+      else if (getMarket.value == "sk") {
+        fetch(scriptURL_SK, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            saveButton.disabled = false;
+            getlabel.innerHTML = savedUrlMsg;
+            setTimeout(() => {
+              getlabel.style.display = "none";
+            }, 5000);
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          })
+          .catch((error) => {
+            console.error("Error", error.message);
+            saveButton.disabled = false;
+          });
+      } 
+      else if (getMarket.value == "rm") {
+        fetch(scriptURL_RM, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            saveButton.disabled = false;
+            getlabel.innerHTML = savedUrlMsg;
+            setTimeout(() => {
+              getlabel.style.display = "none";
+            }, 5000);
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          })
+          .catch((error) => {
+            console.error("Error", error.message);
+            saveButton.disabled = false;
+          });
+      } 
+      else if (getMarket.value == "de") {
+        fetch(scriptURL_DE, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            saveButton.disabled = false;
+            getlabel.innerHTML = savedUrlMsg;
+            setTimeout(() => {
+              getlabel.style.display = "none";
+            }, 5000);
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          })
+          .catch((error) => {
+            console.error("Error", error.message);
+            saveButton.disabled = false;
+          });
+      } 
+      else {
+        fetch(scriptURL_SE, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            saveButton.disabled = false;
+            getlabel.innerHTML = savedUrlMsg;
+            setTimeout(() => {
+              getlabel.style.display = "none";
+            }, 5000);
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          })
+          .catch((error) => {
+            console.error("Error", error.message);
+            saveButton.disabled = false;
+          });
+      }
     });
 };
 
