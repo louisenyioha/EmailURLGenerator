@@ -1,64 +1,321 @@
-window.onload = function() {
-    const getFullUrl = document.querySelector('#full-url');
-    let getURLInput = document.querySelector('#main-url');
+window.onload = function () {
+  const getButton = document.querySelector("#generate-button");
+  const getBulkGenerateBtn = document.querySelector("#bulk-generate-button");
+  const getField = document.querySelector("#ms-codes");
+  const getInputFields = document.querySelectorAll(".multi-input");
+  const concatnated = document.querySelector("#url_codes");
+  const getGenErr = document.querySelector("#gen_error_msg");
+  const getURL = document.querySelector("#website-url");
+  const getCopyButton = document.querySelector("#copy-text");
+  const getMarket_Month = document.querySelector("#mktmth");
+  const getMonth = document.querySelector("#market_month");
+  const getMS_Campaign = document.querySelector("#ms-campaign-list");
+  const getUTM_Medium = document.querySelector("#utm-medium-list");
+  const getMsCampaignInputField = document.querySelector("#ms-campaign");
+  const saveButton = document.querySelector("#save-button");
+  const saveLabel = document.querySelector(".url-save-note");
+  const saveName = document.querySelector("#save-input-name");
+  const bulkUrl = document.querySelector("#bulk-url");
+  const getDropDown = document.querySelector("#adsets");
+  const getMsCode = document.querySelector("#ms-codes");
+  const getInputName = document.querySelector("#save-bulk-input");
+  const saveBulkButton = document.querySelector("#save-bulk-button");
+  const saveBulkLabel = document.querySelector(".url-save-bulk-note");
+  const resetNote = document.querySelector(".reset-note");
+  const getUrlBuilderNav = document.querySelector('#campaignUrlBuilder');
+  const getEmailGenNav = document.querySelector('#emailUrlGenerator');
+  let getUrlBuilderPage = document.querySelector('#campaignUrlBuilderPage');
+  let getEmailGenPage = document.querySelector('#emailUrlGenPage');
 
-    const getFiscalYear = document.querySelector('#fsyear');
-    let getFiscalYearInput = document.querySelector('#fiscal_year');
+  // getUrlBuilderNav.addEventListener('click', function() {
+  //   if(getUrlBuilderNav.classList.contains('active')) {
+  //     getUrlBuilderPage.style.display = 'block';
+  //     getEmailGenPage.style.display = 'none';
+  //   }
+  // });
 
-    const getMarketSourceCode = document.querySelector('#market-source-code');
-    let getMarketSourceCodeInput = document.querySelector('#marketSourceCode');
-
-    const getMarket = document.querySelector('#mkt');
-    let getMarketInput = document.querySelector('#marketfield');
-
-    const getEmailType = document.querySelector('#emailType');
-    let getEmailTypeInput = document.querySelector('#email_type');
-
-    const getNameOfCreative = document.querySelector('#name_of_creative');
-    let getNameofCreativeInput = document.querySelector('#creative_name');
-
-    const getMonth = document.querySelector('#month');
-    let getMonthInput = document.querySelector('#gen_month');
-
-    const getEmailVersion = document.querySelector('#email_version');
-    let getEmailVersionInput = document.querySelector('#emailVersion');
-
-    const getAudienceSegment = document.querySelector('#audience_segment');
-    const getAudienceSegmentInput = document.querySelector('#audienceSegment');
-
-    const getATV = document.querySelector('#additional_testing_variants');
-    let getATVInput = document.querySelector('#adv');
-
-    const getGenBtn = document.querySelector('#btn_generate_url');
-
-    const getInputfields = document.querySelectorAll('.fieldValue');
-
-    const getMainInput = document.querySelectorAll('.input-text');
-
-    const getPickLists = document.querySelectorAll('.pick-list');
-
-    const getAllInputEl = document.querySelectorAll('.req');
+  // getEmailGenNav.addEventListener('click', function() {
+  //   if(getEmailGenNav.classList.contains('active')) {
+  //     getUrlBuilderPage.style.display = 'none';
+  //     getEmailGenPage.style.display = 'block';
+  //   }
+  // });
 
 
+    //Back to top button
+    // const backToTop = document.querySelector('#backToTop');
+  
+    // window.addEventListener('scroll', function() {
+    //   if(window.scrollY > 20) {
+    //   // if(document.body.scrollTop > 2 || document.documentElement.scrollTop > 2) {
+    //     backToTop.style.display = 'block';
+    //   } else {
+    //     backToTop.style.display = 'none';
+    //   }
+    // });
+  
+    // backToTop.addEventListener('click', function() {
+    //   window.scrollTo({
+    //     top: 0,
+    //     behavior: "smooth"
+    //   });
+    // });
+
+  let selectedOptionsUTMCampaign = {};
+  const bulkUrlInstruction = document.querySelector(
+    "#bulk-select-instructions"
+  );
+  let urlType = 'Single';
+
+  bulkUrl.addEventListener('change', function() {
+    let adsets = document.querySelectorAll('#adsets option');
+    let pardotOnly = document.querySelectorAll('.pardot-only');
+    let market = document.querySelector('#mktmth');
+    let month = document.querySelector('#market_month');
+    let mktmth = document.querySelector('#market-month');
+    if(bulkUrl.checked) {
+      urlType = 'Bulk';
     
-    let errorMsg = "whitespace not allowed";
-    let errorMsg2 = "This field is required";
-    let errorMsg3 = 'Please fix all error(s) and click on "Generate URL" button';
-    let savedUrlMsg = "Generated Email URL and Pardot Email name have been saved";
+      adsets.forEach(opt => {
+        if(opt.value == 'em_') {
+          opt.disabled = true;
+        } 
+      });
+
+      pardotOnly.forEach(opt => {
+        if(opt.style.display == 'block') {
+          opt.style.display = 'none';
+        }
+      });
+
+      if(market.disabled) {
+        market.disabled = false;
+      }
+
+      if(month.disabled) {
+        month.disabled = false;
+      }
+
+      if(!mktmth.hasAttribute('required')){
+        mktmth.setAttribute('required', 'required');
+      }
+
+    } else {
+      urlType = 'Single';
+
+      adsets.forEach(opt => {
+        if(opt.value == 'em_') {
+          opt.disabled = false;
+        } 
+      });
+
+    }
+  });
+
+
+  // let fiscalYear = 'fy22'; // This value should be updated at the begining of every fiscal year. (Ususally on October 1st)
+  let fiscalYearValue = 23;
+  let fiscalYear = "fy" + fiscalYearValue;
+  // console.log(adSets)
+
+  const currentDate = new Date();
+  const getRecentMonth = currentDate.getMonth();
+  const getRecentDate = currentDate.getUTCDate();
+  const getRecentYear = currentDate.getFullYear().toString();
+
+  const updateFiscalYear = () => {
+    fiscalYearValue = Number(getRecentYear.slice(2)) + 1;
+    fiscalYear = "fy" + fiscalYearValue;
+  };
+
+  const currentFiscalYear = () => {
+    fiscalYearValue = Number(getRecentYear.slice(2));
+    fiscalYear = "fy" + fiscalYearValue;
+  };
+
+  if (getRecentMonth >= 9 && getRecentMonth <= 11) {
+    updateFiscalYear();
+  } else if (getRecentMonth >= 0 && getRecentMonth < 9) {
+    currentFiscalYear();
+  } else {
+  }
+
+  const updateAdsets = () => {
+    const getSpan = document.querySelectorAll(".fiscal-year");
+    for (let i = 0; i < getSpan.length; i++) {
+      getSpan[i].innerHTML = fiscalYear + "_";
+    }
+  };
+
+  updateAdsets();
+
+  history.scrollRestoration = 'manual';
+  window.onbeforeunload = function () {
+    window.scrollTo(0, 0);
+  };
+
+  let errorMsg = "whitespace not allowed";
+  let errorMsg2 = "This field is required";
+  let errorMsg3 = 'Please fix all error(s) and click on "Generate URL" button';
+  let errorMsg4 = "MS-Code must end with an underscore";
+  let savedUrlMsg = "Generated URL have been saved";
+  let savedBulkUrlMsg = "Generated URLs have been saved";
+
+
+  // Show / Hide pardot fields
+  getDropDown.addEventListener('change', function() {
+    let getText = getDropDown.options[getDropDown.selectedIndex].text;
+    let getPardotFields = document.querySelectorAll('.pardot-only');
+    let getMktMthYr = document.querySelector('#market-month');
+    let getMktMthDropdown = document.querySelector('#mktmth');
+    let getMktYrDropdown = document.querySelector('#market_month');
+
+    for(let i = 0; i < getPardotFields.length; i++) {
+      if(getText == 'Pardot Email add link with tracking') {
+        getPardotFields[i].style.display = 'block';
+        getMktMthYr.removeAttribute('required');
+        // getMktMthDropdown.disabled = true;
+        // getMktYrDropdown.disabled = true;
+      } else {
+        getPardotFields[i].style.display = 'none';
+        getMktMthYr.setAttribute('required', 'required');
+        // getMktMthDropdown.disabled = false;
+        // getMktYrDropdown.disabled = false;
+      }
+    }
+  });
+
+  // concatenation formula
+  const calcResult = function (fieldValues) {
+    for (let i = 0; i < fieldValues.length; i++) {
+      concat =
+        fieldValues[0].value +
+        "?" +
+        "ms=" +
+        fieldValues[1].value +
+        fieldValues[2].value +
+        fieldValues[3].value +
+        "&" +
+        "initialms=" +
+        fieldValues[1].value +
+        fieldValues[2].value +
+        fieldValues[3].value;
+
+      if (fieldValues[4].value) {
+        concat += "&utm_medium=" + fieldValues[4].value;
+      }
+      if (fieldValues[5].value) {
+        concat += "&utm_source=" + fieldValues[5].value;
+      }
+      if (fieldValues[6].value) {
+
+        concat += "&utm_campaign=" + fieldValues[6].value;
+      }
+      if (fieldValues[7].value) {
+        concat += "&utm_content=" + fieldValues[7].value;
+      }
+
+      return concat;
+    }
+  };
 
 
 
-// Check for white space(s) in input fields
-function checkWhiteSpace(str) {
+// # of Email in Series
+const getEmailSeries = document.querySelector('#email_in_series_list');
+getEmailSeries.addEventListener('change', function() {
+  const getInput = document.querySelector('#email_in_series');
+
+  getInput.value = getEmailSeries.value;
+  getInput.removeAttribute('required');
+  if(getInput.nextElementSibling.style.display == 'block') {
+    getInput.nextElementSibling.style.display = 'none';
+  }
+});
+
+// Email Send Audience
+const getEmailSendAudience = document.querySelector('#email_audience_list');
+getEmailSendAudience.addEventListener('change', function() {
+  const getInput = document.querySelector('#email_audience');
+  getInput.value = getEmailSendAudience.value;
+})
+
+
+// concatenation formula for Pardot
+  const calcPardotResult = function() {
+    let partodConcat;
+    const urlField = document.querySelector('#website-url');
+    const mscodeField = document.querySelector('#ms-codes');
+    const mscampaignField = document.querySelector('#ms-campaign');
+    const numberOfEmailinSeries = document.querySelector('#email_in_series');
+    const emailAudience = document.querySelector('#email_audience');
+    const emailSegmentCheckbox = document.querySelector('#email-segment-checkbox');
+    const emailSegment = document.querySelector('#email_segment');
+    const giftStringCheckbox = document.querySelector('#gift-string-checkbox');
+    const giftString = document.querySelector('#gift-string');
+    const formStringCheckbox = document.querySelector('#form-string-checkbox');
+    const formString = document.querySelector('#form-string');
+    const utmMedium = document.querySelector('#utm-medium');
+    const utmSource = document.querySelector('#utm-source');
+    const utmCampaign = document.querySelector('#utm-campaign');
+    const utmContent = document.querySelector('#utm-content');
+    const mktmth = document.querySelector('#market-month');
+
+    partodConcat = 
+    urlField.value + 
+    "?" +
+    "ms=" +
+    mscodeField.value +
+    mscampaignField.value +
+    numberOfEmailinSeries.value;
+
+    if(emailAudience.value) {
+      partodConcat += emailAudience.value;
+    }
+
+    if(mktmth.value) {
+      partodConcat += mktmth.value;
+    }
+
+    if(utmSource.value) {
+      partodConcat += "&utm_source=" + utmSource.value;
+    }
+
+    if(utmMedium.value) {
+      partodConcat += "&utm_medium=" + utmMedium.value;
+    }
+
+    if(utmCampaign.value) {
+      partodConcat += "&utm_campaign=" + utmCampaign.value;
+    }
+
+    if(utmContent.value) {
+      partodConcat += "&utm_content=" + utmContent.value;
+    }
+
+
+    if(emailSegmentCheckbox.checked) {
+      partodConcat += "&es=" + emailSegment.value;
+    }
+    
+    if(giftStringCheckbox.checked) {
+      partodConcat += "gs=" + giftString.value;
+    }
+
+    if(formStringCheckbox.checked) {
+      partodConcat += "af=" + formString.value;
+    }
+
+    return partodConcat;
+
+  }
+
+  // Check for white space(s) in input fields
+  function checkWhiteSpace(str) {
     return /\s/.test(str);
-}
+  }
 
-// Check for white space(s) in input fields
-function checkWhiteSpace(str) {
-return /\s/.test(str);
-}
-
-// Input validation(s)
+  // Input validation(s)
   const inputInvalid = function (el) {
     el.nextElementSibling.style.display = "block";
     if (el.classList.contains("valid")) {
@@ -97,13 +354,150 @@ return /\s/.test(str);
     }
   };
 
-    // Required fields validation
+  // Auto populate market and month
+  const month = [
+    "jan",
+    "feb",
+    "mar",
+    "apr",
+    "may",
+    "jun",
+    "jul",
+    "aug",
+    "sep",
+    "oct",
+    "nov",
+    "dec",
+  ];
+  const getDate = new Date();
+  let getCurrentMonth = month[getDate.getMonth()];
+  let getMarketField = document.querySelector("#market-month");
+  let mktMthArray = [];
+  let mergeMktMth = [getMarket_Month, getMonth];
+  let combinedValue;
+
+  for (let i = 0; i < mergeMktMth.length; i++) {
+    mergeMktMth[i].addEventListener("change", function () {
+      let getElementId = mergeMktMth[i].getAttribute("id");
+
+      if (getElementId === "mktmth") {
+        mktMthArray[0] = mergeMktMth[i].value;
+      } else if (getElementId === "market_month") {
+        mktMthArray[1] = mergeMktMth[i].value;
+      }
+      // mktMthArray.push(mergeMktMth[i].value);
+      // if(mktMthArray.length === 2) {
+      combinedValue = mktMthArray.join("_");
+      getMarketField.value = combinedValue;
+      hiddenInputValidate(getMarketField);
+      // }
+    });
+  }
+
+  // Auto populate MS-Campaign
+  const populateSingleUTMCampaign = function() {
+  getMS_Campaign.addEventListener("change", function () {
+    let getCampaignField = document.querySelector("#ms-campaign");
+    const getOptGroup = document.querySelector("#adsets");
+    const getMsCampaignText =
+      getMS_Campaign.options[getMS_Campaign.selectedIndex].text;
+    // const optGroupLabel = getDropDown.options[getDropDown.selectedIndex].parentElement.label;
+    const getUTMCampaignField = document.querySelector("#utm-campaign");
+    const dataType = getOptGroup.options[getOptGroup.selectedIndex].getAttribute('data-type');
+
+    getCampaignField.value = fiscalYear + "_" + getMS_Campaign.value;
+    hiddenInputValidate(getCampaignField);
+
+    if (getMsCampaignText === "Custom Input") {
+      getCampaignField.value = fiscalYear + "_" + "";
+      getCampaignField.setAttribute("type", "text");
+      getCampaignField.setAttribute("required", "");
+      getCampaignField.style.marginTop = "20px";
+      if (getCampaignField.classList.contains("valid")) {
+        getCampaignField.classList.remove("valid");
+      }
+    } else {
+      getCampaignField.setAttribute("type", "hidden");
+      getCampaignField.style.marginTop = "0";
+    }
+
+    // auto populate UTM Campagin
+    if (
+      dataType === "autoPopulate"
+    ) {
+      getUTMCampaignField.value = getCampaignField.value;
+      getUTMCampaignField.classList.add("valid");
+    } else {
+      if (
+        getMS_Campaign.options[getMS_Campaign.selectedIndex].text !==
+        "Custom Input"
+      ) {
+        getUTMCampaignField.value = "";
+        getUTMCampaignField.classList.remove("valid");
+      }
+    }
+  });
+}
+
+  // MS Campaign custom input
+  getMsCampaignInputField.addEventListener("input", function () {
+    const getUTMfield = document.querySelector("#utm-campaign");
+    const getAdsets = document.querySelector('#adsets');
+    // let getText = getAdsets.options[getAdsets.selectedIndex].text;
+    let getSelectedOption = getAdsets.options[getAdsets.selectedIndex];
+    let getOptGroup = getSelectedOption.parentElement;
+
+    if((getOptGroup.label != 'Email Campaigns Tracking') && (getOptGroup.label != 'Onsite Elements - links on the communications site')) {
+      getUTMfield.value = getMsCampaignInputField.value;
+    }
+    // getUTMfield.value = getMsCampaignInputField.value;
+  });
+
+  // Auto populate UTM Medium
+  getUTM_Medium.addEventListener("change", function () {
+    let getUTM_Medium_Field = document.querySelector("#utm-medium");
+    getUTM_Medium_Field.value = getUTM_Medium.value;
+  });
+
+  for (let i = 0; i < getInputFields.length; i++) {
+    getInputFields[i].addEventListener("input", function () {
+      const getValue = getInputFields[i].value;
+      const getSibling = getInputFields[i].nextElementSibling;
+      if (checkWhiteSpace(getValue) == true) {
+        if (getSibling.classList.contains("error_msg")) {
+          inputInvalid(getInputFields[i]);
+          getInputFields[i].nextElementSibling.innerHTML = errorMsg;
+          getGenErr.innerHTML = errorMsg3;
+        }
+      } else if (checkWhiteSpace(getValue) == false) {
+        if (getValue != "") {
+          inputValid(getInputFields[i]);
+        } else if (getValue == "") {
+          restoreDefault(getInputFields[i]);
+        }
+      }
+    });
+  }
+
+  // ms-code custom input validation
+
+  getField.addEventListener("input", function () {
+    let customInput = getField.value;
+    if (customInput.endsWith("_")) {
+      inputValid(getField);
+    } else {
+      inputInvalid(getField);
+      getField.nextElementSibling.innerHTML = errorMsg4;
+    }
+  });
+
+  // Required fields validation
   const validateRequired = function () {
     let empty = 0;
-    for (let i = 0; i < getAllInputEl.length; i++) {
+    for (let i = 0; i < getInputFields.length; i++) {
       if (
-        getAllInputEl[i].hasAttribute("required") &&
-        getAllInputEl[i].value == ""
+        getInputFields[i].hasAttribute("required") &&
+        getInputFields[i].value == ""
       ) {
         empty++;
       }
@@ -111,381 +505,755 @@ return /\s/.test(str);
     if (empty == 0) {
       return true;
     } else {
-      for (let i = 0; i < getAllInputEl.length; i++) {
+      for (let i = 0; i < getInputFields.length; i++) {
         if (
-            getAllInputEl[i].hasAttribute("required") &&
-            getAllInputEl[i].value == ""
+          getInputFields[i].hasAttribute("required") &&
+          getInputFields[i].value == ""
         ) {
-          inputInvalid(getAllInputEl[i]);
-          getAllInputEl[i].nextElementSibling.innerHTML = errorMsg2;
+          inputInvalid(getInputFields[i]);
+          getInputFields[i].nextElementSibling.innerHTML = errorMsg2;
         }
       }
     }
   };
 
+  ///////////////////
+  // Bulk URL option
+
+  const disableCustomAdset = function () {
+    for (let i = 0; i < getDropDown.options.length; i++) {
+      if (!getDropDown.options[i].value) {
+        getDropDown.options[i].setAttribute("disabled", "");
+      }
+    }
+  };
+
+  const enableCustomAdset = function () {
+    for (let i = 0; i < getDropDown.options.length; i++) {
+      if (!getDropDown.options[i].value) {
+        getDropDown.options[i].removeAttribute("disabled");
+      }
+    }
+  };
+
+  const populateSingleMsCode = function () {
+    // Drop down options - Adsets & Channel for single URL
+    getDropDown.addEventListener("change", function () {
+      let optionText = getDropDown.options[getDropDown.selectedIndex].text;
+      let optionValue = getDropDown.value;
+      let msCampaignField = document.querySelector("#ms-campaign");
+      let optionGroupLabelValue =
+        getDropDown.options[getDropDown.selectedIndex].parentElement.label;
+      let UTMCampaignField = document.querySelector("#utm-campaign");
+      const dataType = getDropDown.options[getDropDown.selectedIndex].getAttribute('data-type');
+      let getUTMMedium = document.querySelector('#utm-medium-list');
+      let getUTMSource = document.querySelector('#utm-source');
+      let getUTMContent = document.querySelector('#utm-content');
+
+     if(urlType === 'Single') {
+        if(optionGroupLabelValue === 'Onsite Elements - links on the communications site') {
+          
+          getUTMMedium.disabled = true;
+          UTMCampaignField.value = '';
+          UTMCampaignField.setAttribute('readonly', 'readonly');
+          getUTMSource.setAttribute('readonly', 'readonly');
+          getUTMContent.setAttribute('readonly', 'readonly');
+        } else{
+          getUTMMedium.disabled = false;
+          UTMCampaignField.removeAttribute('readonly');
+          getUTMSource.removeAttribute('readonly');
+          getUTMContent.removeAttribute('readonly');
+        }
+
+        if(optionGroupLabelValue === 'Email Campaigns Tracking') {
+          UTMCampaignField.value = '';
+        }
+     }
+
+      const populateMSCode = () => {
+        getMsCode.setAttribute("value", optionValue);
+        getMsCode.removeAttribute("required");
+        if (getMsCode.classList.contains("invalid")) {
+          getMsCode.classList.remove("invalid");
+          getMsCode.classList.add("valid");
+          getMsCode.nextElementSibling.innerHTML = "";
+          getMsCode.nextElementSibling.style.display = "none";
+        }
+      };
+
+      populateMSCode();
+
+      if (optionText === "Custom mscode") {
+        getMsCode.removeAttribute("readonly");
+        getMsCode.setAttribute("required", "");
+        getMsCode.value = "";
+      } else {
+        getMsCode.setAttribute("readonly", "yes");
+        getMsCode.value = optionValue;
+      }
+
+      // Check MS Campaign / UTM Campaign
+      if (
+      dataType === "autoPopulate"
+      ) {
+        if (msCampaignField.value) {
+          UTMCampaignField.value = msCampaignField.value;
+          // UTMCampaignField.setAttribute('readonly','yes');
+          UTMCampaignField.classList.add("valid");
+        }
+      } else {
+        if (
+          getMS_Campaign.options[getMS_Campaign.selectedIndex].text !==
+          "Custom Input"
+        ) {
+          UTMCampaignField.value = "";
+          UTMCampaignField.classList.remove("valid");
+        }
+      }
+    });
+  };
+
+  // Direct Mail auto-populate UTM
+  const directmail = function () {
+    // console.log(getMsCode);
+    getDropDown.addEventListener("change", function () {
+      let getMsCodeValue = document.querySelector("#ms-codes");
+      let optionValue = getDropDown.value;
+      let utmMediumvalue = "print";
+      let utmSourceValue = "direct_mail";
+      let getUtmMediumList = document.querySelector("#utm-medium-list");
+      let getUtmMediumDM = document.querySelector("#utm-medium-dm");
+      let getUtmMediumHidden = document.querySelector("#utm-medium");
+      let getUtmSource = document.querySelector("#utm-source");
+
+      if (optionValue === "dm_furl_") {
+        getUtmMediumList.style.display = "none";
+        getUtmMediumDM.style.display = "block";
+        getUtmMediumDM.value = utmMediumvalue;
+        getUtmMediumHidden.value = utmMediumvalue;
+        getUtmSource.value = utmSourceValue;
+        getUtmSource.setAttribute("readonly", "yes");
+      } else {
+        getUtmMediumList.style.display = "block";
+        getUtmMediumDM.style.display = "none";
+        getUtmMediumDM.value = "";
+        getUtmMediumHidden.value = "";
+        getUtmSource.value = "";
+        getUtmSource.removeAttribute("readonly");
+      }
+    });
+  };
+
+  directmail();
+
+  const populateBulkMsCode = function () {
+    getDropDown.addEventListener("change", function () {
+      let len = getDropDown.options.length;
+      let selectedOptions = [];
+      // let displayedOptions = [];
+      let opt;
+
+      for (let i = 0; i < len; i++) {
+        opt = getDropDown.options[i];
+        if (opt.selected) {
+          selectedOptions.push(opt.value + "");
+        }
+      }
+
+      getMsCode.value = selectedOptions.join("\n");
+    });
+  };
+
+  const populateBulkUTMCampaign = function() {
+      const getMSCampaignDropDown = document.querySelector('#ms-campaign-list');
+      const getUTMCampaignTextArea = document.querySelector('#utm-campaign');
+      getMSCampaignDropDown.addEventListener("change", function() {
+          getMSCodeList = document.querySelector('#ms-codes');
+          // console.log(getMSCodeList.value);
+          if(!getMSCodeList.value) {
+              console.log('None');
+          } else {
+              const getAdSetsDropDown = document.querySelector('#adsets');
+              let len = getAdSetsDropDown.options.length;
+              // let selectedOptionsUTMCampaign = {};
+              let selectedOpt;
+              let UTMvalues = '';
+              for(let i = 0; i < len; i++) {
+                  
+                  selectedOpt = getAdSetsDropDown[i];
+                  if(selectedOpt.selected) {
+                      const keyName = selectedOpt.value;
+                      if(selectedOpt.getAttribute('data-type') === 'autoPopulate') {
+                          selectedOptionsUTMCampaign[keyName] = fiscalYear + "_" + getMSCampaignDropDown.options[getMSCampaignDropDown.selectedIndex].text;
+                      } else {
+                          selectedOptionsUTMCampaign[keyName] = 'Leave Blank';
+                      }
+                  }
+              }
+             
+
+              for (const property in selectedOptionsUTMCampaign) {
+                  UTMvalues += `${property} : ${selectedOptionsUTMCampaign[property]} \n`;
+              }
+
+              getUTMCampaignTextArea.value = UTMvalues;
+          }
+      });
+  }
+
   
-  for (let i = 0; i < getMainInput.length; i++) {
-    getMainInput[i].addEventListener("input", function () {
-      const getValue = getMainInput[i].value;
-      const getSibling = getMainInput[i].nextElementSibling;
 
-      if(getMainInput[i].getAttribute('id') == 'name_of_creative') {
-        return;
-      }
+  const resetMSandAdset = function () {
+      const getUTMCampaignTextArea = document.querySelector('#utm-campaign');
+      const getMSCampaignDropDown = document.querySelector('#ms-campaign-list');
+      const getMSCampaignField = document.querySelector('#ms-campaign');
+      getMSCampaignDropDown.selectedIndex = 0;
+      getUTMCampaignTextArea.value = "";
+      getMSCampaignField.value = '';
+      getMsCode.value = "";
+      getDropDown.selectedIndex = 0;
+  };
 
-      if (checkWhiteSpace(getValue) == true) {
-        if (getSibling.classList.contains("error_msg")) {
-          inputInvalid(getMainInput[i]);
-          getMainInput[i].nextElementSibling.innerHTML = errorMsg;
-        }
-      } else if (checkWhiteSpace(getValue) == false) {
-        if (getValue != "") {
-          inputValid(getMainInput[i]);
-        } else if (getValue == "") {
-          restoreDefault(getMainInput[i]);
-        }
-      }
-    });
+  const resetUTMCampaign = function() {
+      selectedOptionsUTMCampaign = {};
   }
 
-  getNameOfCreative.addEventListener('input', function() {
-    let fieldValue = getNameOfCreative.value;
-    if(fieldValue || fieldValue !== null || fieldValue !== '') {
-        if(getNameOfCreative.classList.contains('invalid')) {
-            getNameOfCreative.classList.remove('invalid');
-            getNameOfCreative.classList.add('valid');
-            getNameOfCreative.nextElementSibling.innerHTML = '';
-            getNameOfCreative.nextElementSibling.style.display = 'none';
-        } else {
-          getNameOfCreative.classList.add('valid');
-        }
+  populateSingleMsCode();
+  populateSingleUTMCampaign();
+
+  bulkUrl.addEventListener("change", function () {
+      bulkUTMCampaign = document.querySelector('#utm-campaign');
+      const getUtmSource = document.querySelector('#utm-source');
+      const getUtmMedium = document.querySelector('#utm-medium-list');
+    if (bulkUrl.checked) {
+      getField.setAttribute("rows", "10");
+      getDropDown.setAttribute("multiple", "");
+      getDropDown.style.height = "250px";
+      disableCustomAdset();
+      getButton.classList.add("noShow");
+      getBulkGenerateBtn.classList.remove("noShow");
+      // getUtmSource.setAttribute("readonly", "readonly");
+      getUtmSource.setAttribute("disabled", "disabled");
+      getUtmMedium.setAttribute('disabled', 'disabled');
+
+      // For UTM Campaign
+      bulkUTMCampaign.setAttribute("rows", "10");
+      bulkUTMCampaign.setAttribute("multiple", "");
+      bulkUTMCampaign.style.height = "250px";
+      bulkUTMCampaign.setAttribute("readonly", "readonly");
+
+      getMsCode.setAttribute("required", "");
+      if (getMsCode.classList.contains("valid")) {
+        getMsCode.classList.remove("valid");
+      }
+      concatnated.innerHTML = "";
+      resetNote.style.display = "none";
+      bulkUrlInstruction.style.display = "block";
+
+      // Drop down options - Adsets & Channel for bulk URLS
+      resetMSandAdset();
+      populateBulkMsCode();
+      populateBulkUTMCampaign();
+      resetUTMCampaign();
+
+      saveName.style.display = "none";
+      saveButton.style.display = "none";
+      saveLabel.style.display = "none";
+      getCopyButton.style.display = "none";
+    } else {
+      getField.setAttribute("rows", "2");
+      getDropDown.removeAttribute("multiple");
+      getDropDown.removeAttribute("style");
+      enableCustomAdset();
+      getButton.classList.remove("noShow");
+      getBulkGenerateBtn.classList.add("noShow");
+      // getUtmSource.removeAttribute('readonly');
+      getUtmSource.removeAttribute('disabled');
+      getUtmMedium.removeAttribute('disabled');
+
+      // For UTM Campaign
+      bulkUTMCampaign.setAttribute("rows", "2");
+      bulkUTMCampaign.removeAttribute("multiple");
+      bulkUTMCampaign.removeAttribute("style");
+      bulkUTMCampaign.removeAttribute('readonly');
+
+      getMsCode.setAttribute("required", "");
+      if (getMsCode.classList.contains("valid")) {
+        getMsCode.classList.remove("valid");
+      }
+      concatnated.innerHTML = "";
+      resetNote.style.display = "none";
+      bulkUrlInstruction.style.display = "none";
+
+      // Drop down options - Adsets & Channel for single URL
+      resetMSandAdset();
+      populateSingleMsCode();
+      populateSingleUTMCampaign();
+      resetUTMCampaign();
+
+      saveBulkLabel.style.display = "none";
+      bulkSaveBtn.style.display = "none";
+      getInputName.style.display = "none";
+      getCopyButton.style.display = "none";
     }
   });
 
-  // Prevent dashes in Name of Creative field
-  getNameOfCreative.addEventListener('input', function() {
-    let fieldValue = getNameOfCreative.value;
-    let NewfieldValue = '';
-    if(fieldValue.includes('-')) {
-      NewfieldValue = fieldValue.replace(/-/g, ' ');
-      getNameOfCreative.value = NewfieldValue;
-      getNameOfCreative.nextElementSibling.innerHTML = 'Caution: Dashes are not allowed in this field and will be automatically replaced by a space';
-      getNameOfCreative.nextElementSibling.style.display = 'block';
-      setTimeout(() => {
-        getNameOfCreative.nextElementSibling.innerHTML = '';
-      getNameOfCreative.nextElementSibling.style.display = 'none';
-      }, 3000);
+  const validateAll = function () {
+    let notValid = 0;
+    for (let i = 0; i < getInputFields.length; i++) {
+      if (getInputFields[i].classList.contains("invalid")) {
+        notValid++;
+      }
     }
-  })
+    if (notValid == 0) {
+      return true;
+    } else {
+      // alert('fix errors');
+      getGenErr.innerHTML = errorMsg3;
+    }
+  };
 
-  // Validation for required drop down options
-  for(let i = 0; i < getPickLists.length; i++) {
-    getPickLists[i].addEventListener('change', function(event) {
-        let selectedValue = event.target.value;
-        let getSiblingElement = getPickLists[i].nextElementSibling;
-        let getID = getPickLists[i].getAttribute('id');
-        if(getID !== 'additional_testing_variants') {
-            if(selectedValue === '') {
-                inputInvalid(getPickLists[i]);
-                getSiblingElement.innerHTML = errorMsg2;
-    
-            }
-    
-            if(selectedValue !== '') {
-                inputValid(getPickLists[i]);
-                getSiblingElement.innerHTML = '';
-            }
+  // Generate single URL
+  const singleMsCampaignData = document.querySelector("#ms_campaign_data");
+  const singleMsCodeData = document.querySelector("#ms_code_data");
+  getButton.addEventListener("click", function () {
+    let result = "";
+    let getAdset = document.querySelector('#adsets');
+    let dropDownText = getAdset.options[getAdset.selectedIndex].text;
+
+    if (validateRequired()) {
+      if (validateAll()) {
+
+        if(dropDownText == 'Pardot Email add link with tracking') {
+          let getEmailSeries = document.querySelector('#email_in_series');
+
+          if(getEmailSeries.hasAttribute('required')) {
+            getEmailSeries.nextElementSibling.innerHTML = errorMsg2;
+            getEmailSeries.nextElementSibling.style.display = 'block';
+            getEmailSeries.focus();
+            return;
+          } else {
+            result = calcPardotResult();
+          }
+
+          
+        } else {
+          result = calcResult(getInputFields);
         }
-         
 
-    })
+        // result = calcResult(getInputFields);
+        concatnated.innerHTML = result;
+        singleMsCodeData.value = getField.value;
+        // singleMsCampaignData.value = getMS_Campaign.value;
+        singleMsCampaignData.value = getMsCampaignInputField.value;
+        getCopyButton.style.display = "block";
+        saveLabel.style.display = "block";
+        saveName.style.display = "block";
+        saveButton.style.display = "block";
+        resetNote.style.display = "block";
+        getGenErr.innerHTML = "";
+      } else {
+        // console.log('err2')
+        getGenErr.innerHTML = errorMsg3;
+      }
+    } else {
+      // console.log('err1')
+      getGenErr.innerHTML = errorMsg3;
+    }
+  });
+
+  // Generate bulk URL
+
+  // const getInputName = document.querySelector('#save-bulk-input');
+  // const saveBulkButton = document.querySelector('#save-bulk-button');
+  // const saveBulkLabel = document.querySelector('.url-save-bulk-note');
+
+  // concatenation formula for bulk URLs
+  // const calcBulkResult = function (fieldValues, alt) {
+  //   for (let i = 0; i < fieldValues.length; i++) {
+  //     concat =
+  //       fieldValues[0].value +
+  //       "?" +
+  //       "ms=" +
+  //       alt +
+  //       fieldValues[2].value +
+  //       fieldValues[3].value +
+  //       "&" +
+  //       "initialms=" +
+  //       alt +
+  //       fieldValues[2].value +
+  //       fieldValues[3].value;
+
+  //     if (fieldValues[4].value) {
+  //       concat += "&utm_medium=" + fieldValues[4].value;
+  //     }
+  //     if (fieldValues[5].value) {
+  //       concat += "&utm_source=" + fieldValues[5].value;
+  //     }
+  //     if (fieldValues[6].value) {
+  //       concat += "&utm_campaign=" + fieldValues[6].value;
+  //     }
+  //     if (fieldValues[7].value) {
+  //       concat += "&utm_content=" + fieldValues[7].value;
+  //     }
+
+  //     return concat;
+  //   }
+  // };
+
+   // concatenation formula for bulk URLs
+  const calcBulkResult = function (fieldValues, alt, alt2, source, medium) {
+    for (let i = 0; i < fieldValues.length; i++) {
+      concat =
+        fieldValues[0].value +
+        "?" +
+        "ms=" +
+        alt +
+        fieldValues[2].value +
+        fieldValues[3].value +
+        "&" +
+        "initialms=" +
+        alt +
+        fieldValues[2].value +
+        fieldValues[3].value;
+
+      if (medium !== 'blank' && medium !== 'custom') {
+        concat += "&utm_medium=" + fieldValues[4].value + medium;
+      }
+
+      if (source !== 'blank' && source !== 'custom') {
+        concat += "&utm_source=" + fieldValues[5].value + source;
+      }
+      if (fieldValues[6].value) {
+          if(alt2 !== 'Leave Blank') {
+              concat += "&utm_campaign=" + alt2;
+          }
+      //   concat += "&utm_campaign=" + fieldValues[6].value;
+      }
+      if (fieldValues[7].value) {
+        concat += "&utm_content=" + fieldValues[7].value;
+      }
+
+      return concat;
+    }
+  };
+
+  // const getBulkMsCodes = function () {
+  //   var msarray = [];
+  //   for (let i = 0; i < getDropDown.options.length; i++) {
+  //     if (getDropDown.options[i].selected) {
+  //       msarray.push(getDropDown.options[i].value);
+  //     }
+  //   }
+  //   return msarray;
+  // };
+
+  getBulkGenerateBtn.addEventListener("click", function () {
+    if (validateRequired()) {
+      if (validateAll()) {
+      //   msCodeValues = getBulkMsCodes();
+
+        const bulkUrls = function () {
+          let allUrls = [];
+
+          // for (let i = 0; i < msCodeValues.length; i++) {
+          //   allUrls.push(calcBulkResult(getInputFields, msCodeValues[i]));
+          // }
+
+          let source = '';
+          let medium = '';
+
+          for (let key in selectedOptionsUTMCampaign) {
+            const getAdsetsDropDown = document.querySelector("#adsets");
+            let len = getAdsetsDropDown.options.length;
+            let opt;
+            for (let i = 0; i < len; i++) {
+              opt = getAdsetsDropDown.options[i];
+              if (opt.selected) {
+                if(opt.value === key) {
+                  source = opt.getAttribute('data-source');
+                  medium = opt.getAttribute('data-medium');
+                }
+                
+              }
+            }
+              allUrls.push(calcBulkResult(getInputFields, key, selectedOptionsUTMCampaign[key], source, medium));
+          }
+
+          return allUrls;
+        };
+
+        let results = bulkUrls();
+        concatnated.setAttribute("rows", results.length + 5);
+        concatnated.innerHTML = results.join("\r\n\r\n");
+        getCopyButton.style.display = "block";
+
+        const getBulkDropdown = document.querySelector("#generated-bulk-urls");
+        for (result in results) {
+          getBulkDropdown.add(new Option(results[result]));
+        }
+
+        // Auto populate MS Campaign for google sheet
+        const msCampaignData = document.querySelector("#ms_campaign_bulk_data");
+
+        // msCampaignData.value = getMS_Campaign.value;
+        msCampaignData.value = getMsCampaignInputField.value;
+
+        getCopyButton.style.display = "block";
+        getInputName.style.display = "block";
+        saveBulkButton.style.display = "block";
+        saveBulkLabel.style.display = "block";
+        resetNote.style.display = "block";
+        getGenErr.innerHTML = "";
+      } else {
+        getGenErr.innerHTML = errorMsg3;
+      }
+    } else {
+      getGenErr.innerHTML = errorMsg3;
+    }
+  });
+
+  //URL validation
+  function isValidURL(string) {
+    var res = string.match(
+      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+    );
+    return res !== null;
   }
 
+  getURL.addEventListener("input", function () {
+    let getUrlValue = getURL.value;
 
-    // Populate input fields
-    const populateTextInputValue = function(p1, p2) {
-        p1.addEventListener('input', function() {
-            p2.value = p1.value;
-        });
-    };
+    if (isValidURL(getUrlValue) == true) {
+      if (getURL.classList.contains("invalid")) {
+        getURL.classList.remove("invalid");
+      }
 
-
-   const populateDropDownValue = function(p1, p2) {
-    p1.addEventListener('change', function(event) {
-        const selectedValue = event.target.value;
-        if(selectedValue || selectedValue !== null || selectedValue !== '') {
-            p2.value = selectedValue
-        }
-    });
-   }
-
-
-    populateTextInputValue(getFullUrl, getURLInput);
-
-    populateDropDownValue(getFiscalYear, getFiscalYearInput);
-
-    populateDropDownValue(getMarketSourceCode, getMarketSourceCodeInput);
-
-    populateDropDownValue(getMarket, getMarketInput);
-
-    populateDropDownValue(getEmailType, getEmailTypeInput);
-
-    populateTextInputValue(getNameOfCreative, getNameofCreativeInput);
-
-    populateDropDownValue(getMonth, getMonthInput);
-
-    populateDropDownValue(getEmailVersion, getEmailVersionInput);
-
-    populateDropDownValue(getAudienceSegment, getAudienceSegmentInput);
-
-    populateDropDownValue(getATV, getATVInput);
-
-    // Get input fields
-    // const getInputfields = document.querySelectorAll('.fieldValue');
-
-    const calcUrlResults = function(fields) {
-        for(let i = 0; i < fields.length; i++) {
-            concat = 
-            fields[0].value +
-            "?" +
-            "ms=" +
-            fields[1].value +
-            "_" +
-            fields[2].value +
-            "_" +
-            fields[3].value +
-            "_" +
-            fields[6].value +
-            fields[7].value +
-            fields[8].value +
-            "&" +
-            "utm_medium=email" +
-            "&" +
-            "utm_source=pardot" +
-            "&" +
-            "utm_campaign=" +
-            fields[2].value;
-
-            if(fields[9].value) {
-            //    concat = concat + fields[9].value;
-            //    concat += fields[9].value;
-                concat = 
-                fields[0].value +
-                "?" +
-                "ms=" +
-                fields[1].value +
-                "_" +
-                fields[2].value +
-                "_" +
-                fields[3].value +
-                "_" +
-                fields[6].value +
-                fields[7].value +
-                fields[8].value +
-                fields[9].value +
-                "&" +
-                "utm_medium=email" +
-                "&" +
-                "utm_source=pardot" +
-                "&" +
-                "utm_campaign=" +
-                fields[2].value;
-            }
-            return concat;
-        }
+      if (!getURL.classList.contains("valid")) {
+        getURL.classList.add("invalid");
+      }
     }
 
-    const calcEmailResults = function(fields) {
-        const getFY = document.querySelector('#fsyear');
-        const getSelectedIndex = getFY.selectedIndex;
-        const getSelectedOption = getFY.options[getSelectedIndex];
-        const getSelectedText = getSelectedOption.text;
-
-        for(let i = 0; i < fields.length; i++) {
-            concat = 
-            getSelectedText +
-            " - " +
-            fields[6].value +
-            fields[7].value +
-            fields[8].value +
-            " - " +
-            fields[4].value +
-            " - " +
-            fields[5].value;
-
-            if(fields[9].value) {
-                // concat += " - " + fields[9].value;
-                concat = 
-                getSelectedText +
-                " - " +
-                fields[6].value +
-                fields[7].value +
-                fields[8].value +
-                fields[9].value +
-                " - " +
-                fields[4].value +
-                " - " +
-                fields[5].value;
-            }
-            return concat;
-        }
+    if (isValidURL(getUrlValue) !== true) {
+      if (getURL.classList.contains("valid")) {
+        getURL.classList.remove("valid");
+        getURL.classList.add("invalid");
+        getURL.nextElementSibling.innerHTML =
+          "The website URL provided is not a valid URL.";
+        getURL.nextElementSibling.style.display = "block";
+      }
     }
+  });
 
-    let getUrlResult = document.querySelector('#urloutput');
-    let getEmailResult = document.querySelector('#emailoutput');
-    let getUrlNote = document.querySelector('.url-save-note');
-    let saveButton = document.querySelector("#save-button");
-    let getInputName = document.querySelector('#save-input-name');
-    let getResetNote = document.querySelector('.reset-note');
-    let getCopyBtn = document.querySelector('#copy-text');
-    let getCopyBtn2 = document.querySelector('#emailnameCopy');
+  // Copy generated link
 
-    getGenBtn.addEventListener('click', function() {
-        let urlResult = '';
-        let emailResult = '';
-        if(validateRequired()) {
-            urlResult = calcUrlResults(getInputfields);
-            emailResult = calcEmailResults(getInputfields);
+  getCopyButton.addEventListener("click", function () {
+    const initialText = "Copy";
+    concatnated.select();
+    concatnated.setSelectionRange(0, 999999); //For mobile devices
+    navigator.clipboard.writeText(concatnated.textContent);
 
-            // console.log(urlResult);
-            getUrlResult.value = urlResult;
-            getEmailResult.value = emailResult;
-            getUrlNote.style.display = "block";
-            saveButton.style.display = 'block';
-            getInputName.style.display = 'block';
-            getResetNote.style.display = 'block';
-            getCopyBtn.style.display = 'block';
-            getCopyBtn2.style.display = 'block';
+    if (
+      getCopyButton.textContent
+        .toLowerCase()
+        .includes(initialText.toLowerCase())
+    ) {
+      getCopyButton.textContent = "Copied";
+    } else {
+      getCopyButton.textContent = initialText;
+    }
+  });
 
-        } else {
-            // alert('error');
-        }
-        
+  getCopyButton.addEventListener("mouseout", function () {
+    const initialText = "Copied";
 
-    });
-    // calcResults(getInputfields);
+    if (
+      getCopyButton.textContent
+        .toLowerCase()
+        .includes(initialText.toLowerCase())
+    ) {
+      getCopyButton.textContent = "Copy";
+    }
+  });
 
-
-    //URL validation
-    function isValidURL(string) {
-        var res = string.match(
-        /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+  //Navigation
+  const navigateMenu = function () {
+    const getMenuItems = document.querySelectorAll(".navlink");
+    for (let i = 0; i < getMenuItems.length; i++) {
+      getMenuItems[i].addEventListener("click", function (e) {
+        let currentElement = document.querySelector(".active");
+        currentElement.classList.remove("active");
+        this.classList.add("active");
+        let getURL = this.getAttribute("href");
+        let getSection = getURL.slice(1);
+        let getCurrentActiveSection = document.querySelector(
+          ".tab-content.showContent"
         );
-        return res !== null;
+        let getNewActive = document.querySelector("#" + getSection);
+        getCurrentActiveSection.classList.remove("showContent");
+        getNewActive.classList.add("showContent");
+      });
     }
-    
+  };
+  navigateMenu();
 
-    getFullUrl.addEventListener("input", function () {
-        let getUrlValue = getFullUrl.value;
-    
-        if (isValidURL(getUrlValue) == true) {
-          if (getFullUrl.classList.contains("invalid")) {
-            getFullUrl.classList.remove("invalid");
-          }
-    
-          if (!getFullUrl.classList.contains("valid")) {
-            getFullUrl.classList.add("invalid");
-          }
-        }
-    
-        if (isValidURL(getUrlValue) !== true) {
-          if (getFullUrl.classList.contains("valid")) {
-            getFullUrl.classList.remove("valid");
-            getFullUrl.classList.add("invalid");
-            getFullUrl.nextElementSibling.innerHTML =
-              "The website URL provided is not a valid URL.";
-              getFullUrl.nextElementSibling.style.display = "block";
-          }
-        }
-    });
+  const getMarket = document.querySelector("#mktmth");
 
+  const scriptURL =
+    "https://script.google.com/macros/s/AKfycbz8k_T9cCI5M5t-J0vnoxpGOrqHfs0gb3xo-zm7yMVD1uOkmEvcZq44yR7qwg13RUV9Fw/exec";
+  const scriptURLUS =
+    "https://script.google.com/macros/s/AKfycbygVQiK9ueCtOolnQcrxX-VlJTkde7_s6UxtBbA43sdjYL4_-qepph3zJDdZNo31motTw/exec";
+  const scriptURLDE =
+    "https://script.google.com/macros/s/AKfycbz3G3nM1CiHUWH4U1UvWscAS575RleUuVVQNOxbhv0V-4m3GwnCeM7BWqK2F97s-_Ch5A/exec";
+  const scriptURLUK =
+    "https://script.google.com/macros/s/AKfycbx_a0zhQ0Ku_diKPWuSNU9uT0UvgH7484qeaLtaS29SCCrFdOfSdSTmkA4AVnWNpGuJLA/exec";
+  const scriptURLRM =
+    "https://script.google.com/macros/s/AKfycby5ooL9PNTQifW9ks3qn9jARoaR-yIF_OIzuveiS0zxtlCofAiogYnwbAY1jQObBU7W-A/exec";
+  const scriptURLSE =
+    "https://script.google.com/macros/s/AKfycbw1AJk8PETZMTA3akDhciUFOb3Uu0UFCAGHh1ZsH4w95e66kG6O_Lg_EiOmV4ZOZLYE_w/exec";
+  const scriptURLSK =
+    "https://script.google.com/macros/s/AKfycbzHZTfBqt4tM3v7vIBFOOImoMYhR1acXKb25JmGWWYQP1BR0DTCyvHT8Gc_tmbWy3RNZQ/exec";
+  // const form = document.forms['submit-to-google-sheet']
+  const form = document.querySelector("#submit-to-google-sheet");
+  const getlabel = document.querySelector("#url_saved_message");
 
-    // Copy generated link
-
-    getCopyBtn.addEventListener("click", function () {
-    const initialText = "Copy URL for Email";
-    getUrlResult.select();
-    getUrlResult.setSelectionRange(0, 999999); //For mobile devices
-    // navigator.clipboard.writeText(getUrlResult.textContent);
-    navigator.clipboard.writeText(getUrlResult.value);
-
-    if (
-      getCopyBtn.textContent
-        .toLowerCase()
-        .includes(initialText.toLowerCase())
-    ) {
-      getCopyBtn.textContent = "Email URL Copied";
+  form.addEventListener("submit", (e) => {
+    saveButton.disabled = true;
+    e.preventDefault();
+    const getMarket = document.querySelector("#mktmth");
+    if (getMarket.value == "_demk") {
+      fetch(scriptURLDE, { method: "POST", body: new FormData(form) })
+        .then((response) => {
+          saveButton.disabled = false;
+          getlabel.innerHTML = savedUrlMsg;
+          setTimeout(() => {
+            getlabel.style.display = "none";
+          }, 5000);
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        })
+        .catch((error) => {
+          console.error("Error", error.message);
+          saveButton.disabled = false;
+        });
+    } else if (getMarket.value == "_ukmk") {
+      fetch(scriptURLUK, { method: "POST", body: new FormData(form) })
+        .then((response) => {
+          saveButton.disabled = false;
+          getlabel.innerHTML = savedUrlMsg;
+          setTimeout(() => {
+            getlabel.style.display = "none";
+          }, 5000);
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        })
+        .catch((error) => {
+          console.error("Error", error.message);
+          saveButton.disabled = false;
+        });
+    } else if (getMarket.value == "_nm") {
+      fetch(scriptURLRM, { method: "POST", body: new FormData(form) })
+        .then((response) => {
+          saveButton.disabled = false;
+          getlabel.innerHTML = savedUrlMsg;
+          setTimeout(() => {
+            getlabel.style.display = "none";
+          }, 5000);
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        })
+        .catch((error) => {
+          console.error("Error", error.message);
+          saveButton.disabled = false;
+        });
+    } else if (getMarket.value == "_semk") {
+      fetch(scriptURLSE, { method: "POST", body: new FormData(form) })
+        .then((response) => {
+          saveButton.disabled = false;
+          getlabel.innerHTML = savedUrlMsg;
+          setTimeout(() => {
+            getlabel.style.display = "none";
+          }, 5000);
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        })
+        .catch((error) => {
+          console.error("Error", error.message);
+          saveButton.disabled = false;
+        });
+    } else if (getMarket.value == "_mmsk") {
+      fetch(scriptURLSK, { method: "POST", body: new FormData(form) })
+        .then((response) => {
+          saveButton.disabled = false;
+          getlabel.innerHTML = savedUrlMsg;
+          setTimeout(() => {
+            getlabel.style.display = "none";
+          }, 5000);
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        })
+        .catch((error) => {
+          console.error("Error", error.message);
+          saveButton.disabled = false;
+        });
     } else {
-      getCopyBtn.textContent = initialText;
+      fetch(scriptURLUS, { method: "POST", body: new FormData(form) })
+        .then((response) => {
+          saveButton.disabled = false;
+          getlabel.innerHTML = savedUrlMsg;
+          setTimeout(() => {
+            getlabel.style.display = "none";
+          }, 5000);
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        })
+        .catch((error) => {
+          console.error("Error", error.message);
+          saveButton.disabled = false;
+        });
     }
   });
 
-  getCopyBtn.addEventListener("mouseout", function () {
-    const initialText = "Email URL Copied";
+  // for bulk URLS
 
-    if (
-      getCopyBtn.textContent
-        .toLowerCase()
-        .includes(initialText.toLowerCase())
-    ) {
-      getCopyBtn.textContent = "Copy URL for Email";
+  const bulkSaveBtn = document.querySelector("#save-bulk-button");
+
+  const bulkUrlForm = document.querySelector("#submit-bulk-to-google-sheet");
+  const getBulkDropdown = document.querySelector("#generated-bulk-urls");
+  let urlList;
+  const fetchURLs = function () {
+    let urlarray = [];
+    for (let i = 0; i < getBulkDropdown.options.length; i++) {
+      urlarray.push(getBulkDropdown.options[i].value);
     }
-  });
+    return urlarray;
+  };
 
+  bulkUrlForm.addEventListener("submit", (e) => {
+    urlList = fetchURLs();
 
-    // Copy Pardot Email Name
-
-    getCopyBtn2.addEventListener("click", function () {
-    const initialText = "Copy Pardot Email Name";
-    getEmailResult.select();
-    getEmailResult.setSelectionRange(0, 999999); //For mobile devices
-    // navigator.clipboard.writeText(getUrlResult.textContent);
-    navigator.clipboard.writeText(getEmailResult.value);
-
-    if (
-      getCopyBtn2.textContent
-        .toLowerCase()
-        .includes(initialText.toLowerCase())
-    ) {
-      getCopyBtn2.textContent = "Pardot Email Name Copied";
-    } else {
-      getCopyBtn2.textContent = initialText;
-    }
-  });
-
-  getCopyBtn2.addEventListener("mouseout", function () {
-    const initialText = "Pardot Email Name Copied";
-
-    if (
-      getCopyBtn2.textContent
-        .toLowerCase()
-        .includes(initialText.toLowerCase())
-    ) {
-      getCopyBtn2.textContent = "Copy Pardot Email Name";
-    }
-  });
-
-    const scriptURL_MMUS = "https://script.google.com/macros/s/AKfycbzTVSI115lpjR2dTpy5HOcrzX31AADmFncgKE9Jq76Pr03VH9NRXGEILee3O-IgG1OM0A/exec";
-    const scriptURL_UK = "https://script.google.com/macros/s/AKfycbymlyKNYy1Ru9XSkp1n-qhY3OH2rztv0xFq5x4iQKUxAC-KXi9ZwVoKH8WIaCss2gMu8g/exec";
-    const scriptURL_SK = "https://script.google.com/macros/s/AKfycbwOsNTpHU1-sDjASV2MYUTdYKzYPT0Kbn9AhbvYfvd8qN1wzYzZMVaViMG05LdQRvDoZg/exec";
-    const scriptURL_RM = "https://script.google.com/macros/s/AKfycbwb9BT5n7o970p2rMd4XbWh7rSz0d5FcQysP1YgLcUzc7Daln3YFogGrfHFYKP41yH9jQ/exec";
-    const scriptURL_DE = "https://script.google.com/macros/s/AKfycbzuT-fdusmmzJU66NUce0D2yT0rnxvoIePsJLz3vTmSLMEXOjXxdypBnpbIp_vL3x68hw/exec";
-    const scriptURL_SE = "https://script.google.com/macros/s/AKfycbwHi4Xwtja69aPN02JI_OhKTRJPURUIQ7QVd2Hu2UV9Koax77wDf76CqWgeA1ir4s7JvA/exec";
-    const form = document.querySelector("#submit-to-google-sheet");
-    const getlabel = document.querySelector("#url_saved_message");
-    // const getMarketEmail = document.querySelector("#mkt");
-    
-
-
-    form.addEventListener("submit", (e) => {
-      saveButton.disabled = true;
+    for (let i = 0; i < urlList.length; i++) {
+      let getLink = document.querySelector("#bulkLink");
+      getLink.value = urlList[i];
+      const getBulkMSCode = document.querySelector("#ms_code_bulk_data");
+      let singleURL = urlList[i].slice(urlList[i].indexOf("ms="));
+      let singleParam = singleURL.split("fy")[0];
+      let singleMsCode = singleParam.split("=")[1];
+      getBulkMSCode.value = singleMsCode;
+      bulkSaveBtn.disabled = true;
       e.preventDefault();
-      const getMarketEmail = document.querySelector("#mkt");
-      if (getMarketEmail.value == "us") {
-        fetch(scriptURL_MMUS, { method: "POST", body: new FormData(form) })
+
+      if (getMarket.value == "_demk") {
+        fetch(scriptURLDE, { method: "POST", body: new FormData(bulkUrlForm) })
           .then((response) => {
-            saveButton.disabled = false;
-            getlabel.innerHTML = savedUrlMsg;
+            bulkSaveBtn.disabled = false;
+            getlabel.innerHTML = savedBulkUrlMsg;
             setTimeout(() => {
               getlabel.style.display = "none";
             }, 5000);
@@ -495,14 +1263,13 @@ return /\s/.test(str);
           })
           .catch((error) => {
             console.error("Error", error.message);
-            saveButton.disabled = false;
+            bulkSaveBtn.disabled = false;
           });
-      } 
-      else if (getMarket.value == "uk") {
-        fetch(scriptURL_UK, { method: "POST", body: new FormData(form) })
+      } else if (getMarket.value == "_ukmk") {
+        fetch(scriptURLUK, { method: "POST", body: new FormData(bulkUrlForm) })
           .then((response) => {
-            saveButton.disabled = false;
-            getlabel.innerHTML = savedUrlMsg;
+            bulkSaveBtn.disabled = false;
+            getlabel.innerHTML = savedBulkUrlMsg;
             setTimeout(() => {
               getlabel.style.display = "none";
             }, 5000);
@@ -512,14 +1279,13 @@ return /\s/.test(str);
           })
           .catch((error) => {
             console.error("Error", error.message);
-            saveButton.disabled = false;
+            bulkSaveBtn.disabled = false;
           });
-      } 
-      else if (getMarket.value == "sk") {
-        fetch(scriptURL_SK, { method: "POST", body: new FormData(form) })
+      } else if (getMarket.value == "_nm") {
+        fetch(scriptURLRM, { method: "POST", body: new FormData(bulkUrlForm) })
           .then((response) => {
-            saveButton.disabled = false;
-            getlabel.innerHTML = savedUrlMsg;
+            bulkSaveBtn.disabled = false;
+            getlabel.innerHTML = savedBulkUrlMsg;
             setTimeout(() => {
               getlabel.style.display = "none";
             }, 5000);
@@ -529,14 +1295,13 @@ return /\s/.test(str);
           })
           .catch((error) => {
             console.error("Error", error.message);
-            saveButton.disabled = false;
+            bulkSaveBtn.disabled = false;
           });
-      } 
-      else if (getMarket.value == "rm") {
-        fetch(scriptURL_RM, { method: "POST", body: new FormData(form) })
+      } else if (getMarket.value == "_semk") {
+        fetch(scriptURLSE, { method: "POST", body: new FormData(bulkUrlForm) })
           .then((response) => {
-            saveButton.disabled = false;
-            getlabel.innerHTML = savedUrlMsg;
+            bulkSaveBtn.disabled = false;
+            getlabel.innerHTML = savedBulkUrlMsg;
             setTimeout(() => {
               getlabel.style.display = "none";
             }, 5000);
@@ -546,14 +1311,13 @@ return /\s/.test(str);
           })
           .catch((error) => {
             console.error("Error", error.message);
-            saveButton.disabled = false;
+            bulkSaveBtn.disabled = false;
           });
-      } 
-      else if (getMarket.value == "de") {
-        fetch(scriptURL_DE, { method: "POST", body: new FormData(form) })
+      } else if (getMarket.value == "_mmsk") {
+        fetch(scriptURLSK, { method: "POST", body: new FormData(bulkUrlForm) })
           .then((response) => {
-            saveButton.disabled = false;
-            getlabel.innerHTML = savedUrlMsg;
+            bulkSaveBtn.disabled = false;
+            getlabel.innerHTML = savedBulkUrlMsg;
             setTimeout(() => {
               getlabel.style.display = "none";
             }, 5000);
@@ -563,14 +1327,13 @@ return /\s/.test(str);
           })
           .catch((error) => {
             console.error("Error", error.message);
-            saveButton.disabled = false;
+            bulkSaveBtn.disabled = false;
           });
-      } 
-      else {
-        fetch(scriptURL_SE, { method: "POST", body: new FormData(form) })
+      } else {
+        fetch(scriptURLUS, { method: "POST", body: new FormData(bulkUrlForm) })
           .then((response) => {
-            saveButton.disabled = false;
-            getlabel.innerHTML = savedUrlMsg;
+            bulkSaveBtn.disabled = false;
+            getlabel.innerHTML = savedBulkUrlMsg;
             setTimeout(() => {
               getlabel.style.display = "none";
             }, 5000);
@@ -580,10 +1343,9 @@ return /\s/.test(str);
           })
           .catch((error) => {
             console.error("Error", error.message);
-            saveButton.disabled = false;
+            bulkSaveBtn.disabled = false;
           });
       }
-    });
+    }
+  });
 };
-
-
