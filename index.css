@@ -432,7 +432,7 @@ textarea::selection {
    .sidebar, .saved-urls {
         margin: 0 0 0 20px;
         padding: 0;
-        width: 200px;
+        width: 300px;
         background-color: #000;
         /* position: fixed; */
         height: auto;
