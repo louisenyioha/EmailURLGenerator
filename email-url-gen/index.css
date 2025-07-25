@@ -52,6 +52,11 @@ body {
     display: none;
 }
 
+.reset-note {
+    font-size: 18;
+    font-weight: 700;
+}
+
 .copy-text {
     margin-bottom: 30px;
 }
