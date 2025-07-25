@@ -30,6 +30,7 @@ body {
     /* height: 42px; */
     font-size: 16px;
     cursor: text;
+    color: #000;
 }
 
 #gen_error_msg {
